@@ -5,19 +5,19 @@ import { ModeType } from '../types/common.types'
 import { useState } from "react";
 
 interface Props {
-    appmode: ModeType | null,
-    modeSelect: (modeType: ModeType | null) => void
+    appmode: ModeType,
+    modeSelect: (modeType: ModeType) => void
 }
 
 const Header: React.FC<Props> = ({ appmode, modeSelect }) => {
     const [showMenu, setShowMenu] = useState(false);
 
-    const toggleMenu = (type: ModeType | null) => {
-        if (type != null) {
+    const toggleMenu = (type: ModeType) => {
+        if (type === ModeType.NONE) {
+            setShowMenu(prev => !prev)
+        } else {
             modeSelect(type)
             setShowMenu(false)
-        } else {
-            setShowMenu(prev => !prev)
         }
     }
 
@@ -46,7 +46,7 @@ const Header: React.FC<Props> = ({ appmode, modeSelect }) => {
                 <div className="header_right__menu">
                     <button
                         className="header_button"
-                        onClick={() => toggleMenu(null)}
+                        onClick={() => toggleMenu(ModeType.NONE)}
                     >
                         <FontAwesomeIcon icon={faBars} size={'lg'} className="header_button__icon" />
                     </button>
