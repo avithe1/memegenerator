@@ -4,22 +4,45 @@
     align-items: center;
     height:50px;
     background-image: linear-gradient(to right, lightblue , aqua);
-    position:sticky;
 
     .appname{
-        font-size: 25px;
+        font-family: 'Londrina Outline','Lato',sans-serif;
+        font-size: 35px;
         margin-left: 15px;
         font-weight: bold;
-        color:#fff;
+        color:#000;
     }
 
+    @media (min-width:301px) {
+        .appname {
+            font-size: 35px;
+        }
+    }
+
+    @media (max-width:300px) {
+        .appname {
+            font-size: 20px;
+        }
+    }
+
+
     &_right{
-        height:100%;
+        @media (max-width:500px) {
+            &__buttons {
+                display: none;
+            }
+        }
+
+        @media (min-width:500px) {
+            &__menu {
+                display: none;
+            }
+        }
     }
 
     &_button {
         padding:15px;
-        height: 100%;
+        height: 50px;
         border:none;
         background-color: transparent;
         cursor: pointer;
@@ -39,10 +62,11 @@
 
         &__icon{
             margin:0 8px;
-        }
-    
+        }        
     }
 }
+
+
 
 
 
