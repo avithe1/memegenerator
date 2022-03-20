@@ -10,17 +10,22 @@ export enum TextDirection {
   NOTSELECTED
 }
 
-export interface MemeData  {
+export enum MemeSide {
+  LEFT,
+  RIGHT
+}
+
+export interface MemeData {
   imgTxt: {
-      txtleft: string,
-      txtright: string
+    txtleft: string,
+    txtright: string
   },
   imgUrl: {
-      imgurlleft: string,
-      imgurlright: string
+    imgurlleft: string,
+    imgurlright: string
   },
   txtDirection: {
-      txtdirectionleft: TextDirection,
-      txtdirectionright: TextDirection
+    txtdirectionleft: TextDirection,
+    txtdirectionright: TextDirection
   },
 }

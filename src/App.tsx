@@ -5,7 +5,7 @@ import { MenuOptions } from './types/common.types';
 import CreateMemeContext from './context/CreateContext';
 import CreateMeme from './components/CreateMeme';
 import BrowseMeme from './components/BrowseMeme';
-import { MemeData, TextDirection } from './types/common.types'
+import { MemeData, TextDirection, MemeSide } from './types/common.types'
 
 const initCreateContext: MemeData = {
   imgTxt: {
@@ -32,15 +32,23 @@ function App() {
     setAppmode(option)
   }
 
-  const handleLeftImgText = (val: string) => {
+  const handleImgText = (val: string, side: MemeSide) => {
     const newState = { ...state }
-    newState.imgTxt.txtleft = val;
+    if (side === MemeSide.LEFT) {
+      newState.imgTxt.txtleft = val;
+    } else {
+      newState.imgTxt.txtright = val;
+    }
     setState(newState)
   }
 
-  const handleLeftDirection = (val: TextDirection) => {
+  const handleDirection = (val: TextDirection, side: MemeSide) => {
     const newState = { ...state }
-    newState.txtDirection.txtdirectionleft = val;
+    if (side === MemeSide.LEFT) {
+      newState.txtDirection.txtdirectionleft = val;
+    } else {
+      newState.txtDirection.txtdirectionright = val;
+    }
     setState(newState)
   }
 
@@ -50,7 +58,7 @@ function App() {
       {
         appmode === MenuOptions.CREATE ?
           <CreateMemeContext.Provider value={state}>
-            <CreateMeme handleLeftImgText={handleLeftImgText} handleLeftDirection={handleLeftDirection}/>
+            <CreateMeme handleImgText={handleImgText} handleDirection={handleDirection} />
           </CreateMemeContext.Provider>
           : <BrowseMeme />
       }
