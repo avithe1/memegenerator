@@ -6,17 +6,44 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {
     side: MemeSide
-    defaultMemeData: MemeData
     handleImgText: (val: string, side: MemeSide) => void,
     handleDirection: (val: TextDirection, side: MemeSide) => void
 }
 
-const MemeSideComponent: React.FC<Props> = ({ side, defaultMemeData, handleDirection, handleImgText }) => {
+const defaultMemeData: MemeData = {
+    imgTxt: {
+        txtleft: "Edit to enter text for LEFT meme image",
+        txtright: "Edit to enter text for RIGHT meme image"
+    },
+    imgUrl: {
+        imgurlleft: "https://i1.wp.com/lanecdr.org/wp-content/uploads/2019/08/placeholder.png",
+        imgurlright: "https://i1.wp.com/lanecdr.org/wp-content/uploads/2019/08/placeholder.png"
+    },
+    txtDirection: {
+        txtdirectionleft: TextDirection.UP,
+        txtdirectionright: TextDirection.UP
+    }
+}
+
+const MemeSideComponent: React.FC<Props> = ({ side, handleDirection, handleImgText }) => {
     const [edit, setEdit] = useState(false)
     const ctx = useContext(CreateMemeContext);
 
+    const imgTxt = side === MemeSide.LEFT ? ctx.imgTxt.txtleft.length ? ctx.imgTxt.txtleft : defaultMemeData.imgTxt.txtleft
+        : ctx.imgTxt.txtright.length ? ctx.imgTxt.txtright : defaultMemeData.imgTxt.txtright
+
     const textDirectionContext = side === MemeSide.LEFT ? ctx.txtDirection.txtdirectionleft : ctx.txtDirection.txtdirectionright
+    const imgTxtContext = side === MemeSide.LEFT ? ctx.imgTxt.txtleft : ctx.imgTxt.txtright
+
     const textDirectionDefault = side === MemeSide.LEFT ? defaultMemeData.txtDirection.txtdirectionleft : defaultMemeData.txtDirection.txtdirectionright
+    const imgTxtDefault = side === MemeSide.LEFT ? defaultMemeData.imgTxt.txtleft : defaultMemeData.imgTxt.txtright
+
+    const imgUrl = side === MemeSide.LEFT ?
+        ctx.imgUrl.imgurlleft.length ? ctx.imgUrl.imgurlleft : defaultMemeData.imgUrl.imgurlleft
+        : ctx.imgUrl.imgurlright.length ? ctx.imgUrl.imgurlright : defaultMemeData.imgUrl.imgurlright
+
+    const imgAlt = side === MemeSide.LEFT ? "Meme picture LEFT" : "Meme picture RIGHT"
+    const imgPlaceHolder = side === MemeSide.LEFT ? "Enter image URL for LEFT side" : "Enter image URL for RIGHT side"
 
     const imgTxtHandler = (e: React.ChangeEvent<HTMLInputElement>, side: MemeSide) => {
         handleImgText(e.target.value, side)
@@ -55,11 +82,11 @@ const MemeSideComponent: React.FC<Props> = ({ side, defaultMemeData, handleDirec
                         </div>
                         <div className="inputContainer">
                             <input
-                                value={side === MemeSide.LEFT ? ctx.imgTxt.txtleft : ctx.imgTxt.txtright}
+                                value={imgTxtContext}
                                 onChange={(e) => imgTxtHandler(e, side)}
                                 className="text_input"
                                 type="text"
-                                placeholder={side === MemeSide.LEFT ? defaultMemeData.imgTxt.txtleft : defaultMemeData.imgTxt.txtright} />
+                                placeholder={imgTxtDefault} />
                         </div>
                     </div>
                     :
@@ -68,22 +95,16 @@ const MemeSideComponent: React.FC<Props> = ({ side, defaultMemeData, handleDirec
                             textDirectionDefault === TextDirection.UP ? 'canvas_txt__top' : 'canvas_txt__bottom' :
                             textDirectionContext === TextDirection.UP ? 'canvas_txt__top' : 'canvas_txt__bottom'
                             }`}>
-                        {
-                            side === MemeSide.LEFT ? ctx.imgTxt.txtleft.length ? ctx.imgTxt.txtleft : defaultMemeData.imgTxt.txtleft
-                                : ctx.imgTxt.txtright.length ? ctx.imgTxt.txtright : defaultMemeData.imgTxt.txtright
-                        }
+                        {imgTxt}
                     </p>
             }
             <img
                 className="canvas_img"
-                src={side === MemeSide.LEFT ?
-                    ctx.imgUrl.imgurlleft.length ? ctx.imgUrl.imgurlleft : defaultMemeData.imgUrl.imgurlleft
-                    : ctx.imgUrl.imgurlright.length ? ctx.imgUrl.imgurlright : defaultMemeData.imgUrl.imgurlright
-                }
-                alt="Meme picture left" />
+                src={imgUrl}
+                alt={imgAlt} />
             {
                 edit ?
-                    <input className="url_input" type="text" placeholder={side === MemeSide.LEFT ? "Enter image URL for left side" : "Enter image URL for right side"} />
+                    <input className="url_input" type="text" placeholder={imgPlaceHolder} />
                     : null
             }
 
