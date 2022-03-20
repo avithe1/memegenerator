@@ -87,7 +87,9 @@ const MemeSideComponent: React.FC<Props> = ({ side, handleDirection, handleImgTe
     const handleImageUrlEditor = side === MemeSide.LEFT ? handleImageUrlEditorLeft : handleImageUrlEditorRight
 
     const imgTxtHandler = (e: React.ChangeEvent<HTMLInputElement>, side: MemeSide) => {  //this has nothing to do with image URL , it is the top or bottom meme text handler
-        handleImgText(e.target.value, side)
+        if (e.target.value && e.target.value.length < 100) {
+            handleImgText(e.target.value, side)
+        }
     }
 
     return (
