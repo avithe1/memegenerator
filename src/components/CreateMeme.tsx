@@ -8,20 +8,16 @@ import MemeSideComponent from "./MemeSide";
 interface Props {
     handleImgText: (val: string, side: MemeSide) => void,
     handleDirection: (val: TextDirection, side: MemeSide) => void
+    handleImgURL: (val: string, side: MemeSide) => void
 }
 
-const CreateMeme: React.FC<Props> = ({ handleImgText, handleDirection }) => {
+const CreateMeme: React.FC<Props> = ({ handleImgText, handleDirection, handleImgURL }) => {
     const ctx = useContext(CreateMemeContext)
-
-    const imgTxtHandler = (e: React.ChangeEvent<HTMLInputElement>, side: MemeSide) => {
-        handleImgText(e.target.value, side)
-    }
-
     return (
         <div className="creatememe">
             <div className="canvas">
-                <MemeSideComponent side={MemeSide.LEFT} handleDirection={handleDirection} handleImgText={handleImgText} />
-                <MemeSideComponent side={MemeSide.RIGHT} handleDirection={handleDirection} handleImgText={handleImgText} />
+                <MemeSideComponent side={MemeSide.LEFT} handleDirection={handleDirection} handleImgText={handleImgText} handleImgURL={handleImgURL} />
+                <MemeSideComponent side={MemeSide.RIGHT} handleDirection={handleDirection} handleImgText={handleImgText} handleImgURL={handleImgURL} />
             </div>
         </div>
     )

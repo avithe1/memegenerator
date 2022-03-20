@@ -3,11 +3,13 @@ import CreateMemeContext from "../context/CreateContext";
 import { MemeSide, TextDirection, MemeData } from "../types/common.types";
 import { faSquarePen as editIcon, faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import './MemeSide.scss'
 
 interface Props {
     side: MemeSide
     handleImgText: (val: string, side: MemeSide) => void,
     handleDirection: (val: TextDirection, side: MemeSide) => void
+    handleImgURL: (val: string, side: MemeSide) => void
 }
 
 const defaultMemeData: MemeData = {
@@ -25,9 +27,11 @@ const defaultMemeData: MemeData = {
     }
 }
 
-const MemeSideComponent: React.FC<Props> = ({ side, handleDirection, handleImgText }) => {
+const MemeSideComponent: React.FC<Props> = ({ side, handleDirection, handleImgText, handleImgURL }) => {
+
     const [edit, setEdit] = useState(false)
     const ctx = useContext(CreateMemeContext);
+
 
     const imgTxt = side === MemeSide.LEFT ? ctx.imgTxt.txtleft.length ? ctx.imgTxt.txtleft : defaultMemeData.imgTxt.txtleft
         : ctx.imgTxt.txtright.length ? ctx.imgTxt.txtright : defaultMemeData.imgTxt.txtright
@@ -45,13 +49,50 @@ const MemeSideComponent: React.FC<Props> = ({ side, handleDirection, handleImgTe
     const imgAlt = side === MemeSide.LEFT ? "Meme picture LEFT" : "Meme picture RIGHT"
     const imgPlaceHolder = side === MemeSide.LEFT ? "Enter image URL for LEFT side" : "Enter image URL for RIGHT side"
 
-    const imgTxtHandler = (e: React.ChangeEvent<HTMLInputElement>, side: MemeSide) => {
+
+    const [tempImgUrlLeft, setTmpImgUrlLeft] = useState(ctx.imgUrl.imgurlleft.length ? ctx.imgUrl.imgurlleft : defaultMemeData.imgUrl.imgurlleft)
+    const [tempImgUrlRight, setTmpImgUrlRight] = useState(ctx.imgUrl.imgurlright.length ? ctx.imgUrl.imgurlright : defaultMemeData.imgUrl.imgurlright)
+
+    const handleEditToggle = () => {
+        if (!edit) {
+            setEdit(true)
+        } else {
+            console.log(imgUrl)
+            if (side === MemeSide.LEFT) {
+                if (tempImgUrlLeft !== imgUrl) {
+                    handleImgURL(tempImgUrlLeft, MemeSide.LEFT)
+                } else {
+                    console.log("nothing to save on left side ")
+                }
+            } else {
+                if (tempImgUrlRight !== imgUrl) {
+                    handleImgURL(tempImgUrlRight, MemeSide.RIGHT)
+                } else {
+                    console.log("nothing to save on right side ")
+                }
+            }
+
+            setEdit(false)
+        }
+    }
+
+    const handleImageUrlEditorLeft = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTmpImgUrlLeft(e.target.value)
+    }
+
+    const handleImageUrlEditorRight = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setTmpImgUrlRight(e.target.value)
+    }
+
+    const handleImageUrlEditor = side === MemeSide.LEFT ? handleImageUrlEditorLeft : handleImageUrlEditorRight
+
+    const imgTxtHandler = (e: React.ChangeEvent<HTMLInputElement>, side: MemeSide) => {  //this has nothing to do with image URL , it is the top or bottom meme text handler
         handleImgText(e.target.value, side)
     }
 
     return (
         <div className={side === MemeSide.LEFT ? "canvas_left" : "canvas_right"}>
-            <div className={side === MemeSide.LEFT ? "config_left" : "config_right"} onClick={() => setEdit(prev => !prev)}>
+            <div className={side === MemeSide.LEFT ? "config_left" : "config_right"} onClick={handleEditToggle}>
                 <FontAwesomeIcon icon={editIcon} size={'lg'} className="edit_icon" /> <span className="edittxt">{edit ? "Done" : "Edit"}</span>
             </div>
             {
@@ -104,7 +145,7 @@ const MemeSideComponent: React.FC<Props> = ({ side, handleDirection, handleImgTe
                 alt={imgAlt} />
             {
                 edit ?
-                    <input className="url_input" type="text" placeholder={imgPlaceHolder} />
+                    <input className="url_input" type="text" placeholder={imgPlaceHolder} onChange={handleImageUrlEditor} value={side === MemeSide.LEFT ? tempImgUrlLeft : tempImgUrlRight} />
                     : null
             }
 

@@ -52,13 +52,23 @@ function App() {
     setState(newState)
   }
 
+  const handleImgURL = (val: string, side: MemeSide) => {
+    const newState = { ...state }
+    if (side === MemeSide.LEFT) {
+      newState.imgUrl.imgurlleft = val;
+    } else {
+      newState.imgUrl.imgurlright = val;
+    }
+    setState(newState)
+  }
+
   return (
     <>
       <Header appmode={appmode} menuSelect={menuSelect} />
       {
         appmode === MenuOptions.CREATE ?
           <CreateMemeContext.Provider value={state}>
-            <CreateMeme handleImgText={handleImgText} handleDirection={handleDirection} />
+            <CreateMeme handleImgText={handleImgText} handleDirection={handleDirection} handleImgURL={handleImgURL}/>
           </CreateMemeContext.Provider>
           : <BrowseMeme />
       }
