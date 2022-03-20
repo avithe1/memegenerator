@@ -70,6 +70,7 @@
 @media screen and (max-width:500px) {
     .header {
         position: relative;
+        z-index: 2;
     }
 
     .header_right__buttons__show {

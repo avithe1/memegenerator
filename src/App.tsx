@@ -17,8 +17,8 @@ const initCreateContext: MemeData = {
     imgurlright: ""
   },
   txtDirection: {
-    txtdirectionleft: TextDirection.NOTSELECTED,
-    txtdirectionright: TextDirection.NOTSELECTED
+    txtdirectionleft: TextDirection.UP,
+    txtdirectionright: TextDirection.UP
   },
 }
 
@@ -68,7 +68,7 @@ function App() {
       {
         appmode === MenuOptions.CREATE ?
           <CreateMemeContext.Provider value={state}>
-            <CreateMeme handleImgText={handleImgText} handleDirection={handleDirection} handleImgURL={handleImgURL}/>
+            <CreateMeme handleImgText={handleImgText} handleDirection={handleDirection} handleImgURL={handleImgURL} />
           </CreateMemeContext.Provider>
           : <BrowseMeme />
       }

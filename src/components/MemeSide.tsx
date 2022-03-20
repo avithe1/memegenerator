@@ -71,23 +71,22 @@ const MemeSideComponent: React.FC<Props> = ({ side, handleDirection, handleImgTe
                     console.log("nothing to save on right side ")
                 }
             }
-
             setEdit(false)
         }
     }
 
-    const handleImageUrlEditorLeft = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUrlEditorLeft = (e: React.ChangeEvent<HTMLInputElement>) => { //Image URL
         setTmpImgUrlLeft(e.target.value)
     }
 
-    const handleImageUrlEditorRight = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUrlEditorRight = (e: React.ChangeEvent<HTMLInputElement>) => { //Image URL
         setTmpImgUrlRight(e.target.value)
     }
 
     const handleImageUrlEditor = side === MemeSide.LEFT ? handleImageUrlEditorLeft : handleImageUrlEditorRight
 
     const imgTxtHandler = (e: React.ChangeEvent<HTMLInputElement>, side: MemeSide) => {  //this has nothing to do with image URL , it is the top or bottom meme text handler
-        if (e.target.value && e.target.value.length < 100) {
+        if ( e.target.value.length < 100) {
             handleImgText(e.target.value, side)
         }
     }
