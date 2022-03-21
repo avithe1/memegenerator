@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import CreateMemeContext from "../context/CreateContext";
 import { MemeSide, TextDirection, MemeData } from "../types/common.types";
-import { faSquarePen as editIcon, faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { faEdit as editIcon, faArrowUp, faArrowDown, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import './MemeSide.scss'
 
@@ -50,7 +50,7 @@ const MemeSideComponent: React.FC<Props> = ({ side, handleDirection, handleImgTe
     const imgPlaceHolder = side === MemeSide.LEFT ? "Enter image URL for LEFT side" : "Enter image URL for RIGHT side"
 
 
-    const [tempImgUrlLeft, setTmpImgUrlLeft] = useState(ctx.imgUrl.imgurlleft.length ? ctx.imgUrl.imgurlleft :"")
+    const [tempImgUrlLeft, setTmpImgUrlLeft] = useState(ctx.imgUrl.imgurlleft.length ? ctx.imgUrl.imgurlleft : "")
     const [tempImgUrlRight, setTmpImgUrlRight] = useState(ctx.imgUrl.imgurlright.length ? ctx.imgUrl.imgurlright : "")
 
     const handleEditToggle = () => {
@@ -100,7 +100,7 @@ const MemeSideComponent: React.FC<Props> = ({ side, handleDirection, handleImgTe
     return (
         <div className={side === MemeSide.LEFT ? "canvas_left" : "canvas_right"}>
             <div className={side === MemeSide.LEFT ? "config_left" : "config_right"} onClick={handleEditToggle}>
-                <FontAwesomeIcon icon={editIcon} size={'lg'} className="edit_icon" /> <span className="edittxt">{edit ? "Done" : "Edit"}</span>
+                <FontAwesomeIcon icon={edit ? faFloppyDisk : editIcon} size={'lg'} className="edit_icon" /> <span className="edittxt">{edit ? "Save" : "Edit"}</span>
             </div>
             {
                 edit ?
