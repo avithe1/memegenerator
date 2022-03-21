@@ -23,13 +23,18 @@ const initCreateContext: MemeData = {
 }
 
 function App() {
+  const [memeid, setMemeId] = useState("")
   const [appmode, setAppmode] = useState<MenuOptions>(MenuOptions.BROWSE);
-
   const [state, setState] = useState(initCreateContext)
 
-
   const menuSelect = (option: MenuOptions) => {
+    setMemeId("")
     setAppmode(option)
+  }
+
+  const gotoMeme = (id: string) => {
+    setMemeId(id)
+    setAppmode(MenuOptions.BROWSE)
   }
 
   const handleImgText = (val: string, side: MemeSide) => {
@@ -68,9 +73,9 @@ function App() {
       {
         appmode === MenuOptions.CREATE ?
           <CreateMemeContext.Provider value={state}>
-            <CreateMeme handleImgText={handleImgText} handleDirection={handleDirection} handleImgURL={handleImgURL} />
+            <CreateMeme handleImgText={handleImgText} handleDirection={handleDirection} handleImgURL={handleImgURL} gotoMeme={gotoMeme}/>
           </CreateMemeContext.Provider>
-          : <BrowseMeme id={null}/>
+          : <BrowseMeme id={memeid.length ? memeid : null} />
       }
     </>
   );

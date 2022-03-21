@@ -10,9 +10,10 @@ interface Props {
     handleImgText: (val: string, side: MemeSide) => void,
     handleDirection: (val: TextDirection, side: MemeSide) => void
     handleImgURL: (val: string, side: MemeSide) => void
+    gotoMeme: (id: string) => void
 }
 
-const CreateMeme: React.FC<Props> = ({ handleImgText, handleDirection, handleImgURL }) => {
+const CreateMeme: React.FC<Props> = ({ handleImgText, handleDirection, handleImgURL, gotoMeme }) => {
     const ctx = useContext(CreateMemeContext)
 
 
@@ -85,6 +86,8 @@ const CreateMeme: React.FC<Props> = ({ handleImgText, handleDirection, handleImg
         handleImgText("", MemeSide.RIGHT)
         handleImgURL("", MemeSide.RIGHT)
         handleDirection(TextDirection.UP, MemeSide.RIGHT)
+
+        gotoMeme(res.id)
     }
 
     return (

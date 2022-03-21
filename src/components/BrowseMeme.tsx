@@ -14,24 +14,23 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
     const [memeData, setMemeData] = useState<MemeData | null>(null)
     const [fetchStatus, setFetchStatus] = useState("Loading...")
     const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
-    const fetchData = async (): Promise<MemeData[]> => {
+
+
+    const fetchData = async () => {
         if (!id && !lastVisible) {
-            console.log("here1")
-
-
             var first = db.collection('memes').orderBy("createdAt", "desc").limit(1);
-            console.log("FIRST QUERY!")
+            console.log("FIRST MEME!")
             first.get().then(function (documentSnapshots) {
-                setMemeData(documentSnapshots.docs[documentSnapshots.docs.length - 1].data() as MemeData)
-                setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1])
-
+                if (documentSnapshots.docs.length) {
+                    setFetchStatus("")
+                    setMemeData(documentSnapshots.docs[documentSnapshots.docs.length - 1].data() as MemeData)
+                    setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1])
+                } else {
+                    setFetchStatus("There are no memes available")
+                }
             });
-
-
         } else {
-            console.log("here2")
             if (id && !lastVisible) {
-                console.log("here3")
                 const dataRef = db.collection('memes').doc(id!);
                 const doc = await dataRef.get();
 
@@ -39,13 +38,12 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
                     setMemeData(null)
                     setFetchStatus("Meme does not exist")
                 } else {
+                    setFetchStatus("")
                     const data: MemeData = doc.data() as MemeData
                     setMemeData(data)
                 }
             }
         }
-
-        return [];
     }
 
     const showNext = async () => {
@@ -57,12 +55,12 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
 
             next.get().then(function (docSn) {
                 console.log("SECOND QUERY!")
-                docSn.forEach(function (doc) {
-                    console.log(doc.data().createdAt.toMillis())
-                });
-
-                setMemeData(docSn.docs[docSn.docs.length - 1].data() as MemeData)
-                setLastVisible(docSn.docs[docSn.docs.length - 1])
+                if (docSn.docs.length) {
+                    setMemeData(docSn.docs[docSn.docs.length - 1].data() as MemeData)
+                    setLastVisible(docSn.docs[docSn.docs.length - 1])
+                } else {
+                    setFetchStatus("No more memes")
+                }
             });
         } else {
             console.log("NO lastVisible: ")
@@ -75,6 +73,7 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
 
     return (
         <div className="main">
+            <p>{fetchStatus}</p>
             {
                 memeData ?
                     <>
@@ -89,14 +88,10 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
                                 id ?
                                     <button className="submit_btn">Browse from start</button>
                                     :
-                                    <>
-                                        <button className="submit_btn">PREV</button>
-                                        <button className="submit_btn" onClick={showNext}>NEXT</button>
-                                    </>
+                                    <button className="submit_btn" onClick={showNext}>NEXT</button>
                             }
                         </div>
-                    </>
-                    : <p>{fetchStatus}</p>
+                    </> : null
             }
 
         </div>
