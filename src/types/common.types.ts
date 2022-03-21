@@ -16,6 +16,7 @@ export enum MemeSide {
 }
 
 export interface MemeData {
+  createdAt?:string
   imgTxt: {
     txtleft: string,
     txtright: string

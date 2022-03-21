@@ -50,25 +50,20 @@ const MemeSideComponent: React.FC<Props> = ({ side, handleDirection, handleImgTe
     const imgPlaceHolder = side === MemeSide.LEFT ? "Enter image URL for LEFT side" : "Enter image URL for RIGHT side"
 
 
-    const [tempImgUrlLeft, setTmpImgUrlLeft] = useState(ctx.imgUrl.imgurlleft.length ? ctx.imgUrl.imgurlleft : defaultMemeData.imgUrl.imgurlleft)
-    const [tempImgUrlRight, setTmpImgUrlRight] = useState(ctx.imgUrl.imgurlright.length ? ctx.imgUrl.imgurlright : defaultMemeData.imgUrl.imgurlright)
+    const [tempImgUrlLeft, setTmpImgUrlLeft] = useState(ctx.imgUrl.imgurlleft.length ? ctx.imgUrl.imgurlleft :"")
+    const [tempImgUrlRight, setTmpImgUrlRight] = useState(ctx.imgUrl.imgurlright.length ? ctx.imgUrl.imgurlright : "")
 
     const handleEditToggle = () => {
         if (!edit) {
             setEdit(true)
         } else {
-            console.log(imgUrl)
             if (side === MemeSide.LEFT) {
                 if (tempImgUrlLeft !== imgUrl) {
                     handleImgURL(tempImgUrlLeft, MemeSide.LEFT)
-                } else {
-                    console.log("nothing to save on left side ")
                 }
             } else {
                 if (tempImgUrlRight !== imgUrl) {
                     handleImgURL(tempImgUrlRight, MemeSide.RIGHT)
-                } else {
-                    console.log("nothing to save on right side ")
                 }
             }
             setEdit(false)
@@ -86,8 +81,19 @@ const MemeSideComponent: React.FC<Props> = ({ side, handleDirection, handleImgTe
     const handleImageUrlEditor = side === MemeSide.LEFT ? handleImageUrlEditorLeft : handleImageUrlEditorRight
 
     const imgTxtHandler = (e: React.ChangeEvent<HTMLInputElement>, side: MemeSide) => {  //this has nothing to do with image URL , it is the top or bottom meme text handler
-        if ( e.target.value.length < 100) {
+        if (e.target.value.length < 100) {
             handleImgText(e.target.value, side)
+        }
+    }
+
+    const imgError = () => {
+        let placeHolderURL = "https://i1.wp.com/lanecdr.org/wp-content/uploads/2019/08/placeholder.png"
+        window.alert("Image could not be loaded, reverting to default.")
+        handleImgURL(placeHolderURL, side)
+        if (side === MemeSide.LEFT) {
+            setTmpImgUrlLeft(defaultMemeData.imgUrl.imgurlleft)
+        } else {
+            setTmpImgUrlRight(defaultMemeData.imgUrl.imgurlright)
         }
     }
 
@@ -143,6 +149,7 @@ const MemeSideComponent: React.FC<Props> = ({ side, handleDirection, handleImgTe
             <img
                 className="canvas_img"
                 src={imgUrl}
+                onError={imgError}
                 alt={imgAlt} />
             {
                 edit ?

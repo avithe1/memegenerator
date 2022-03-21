@@ -70,7 +70,7 @@ function App() {
           <CreateMemeContext.Provider value={state}>
             <CreateMeme handleImgText={handleImgText} handleDirection={handleDirection} handleImgURL={handleImgURL} />
           </CreateMemeContext.Provider>
-          : <BrowseMeme />
+          : <BrowseMeme id={null}/>
       }
     </>
   );
