@@ -3,6 +3,7 @@ import './CreateMeme.scss'
 import { MemeSide, MemeData } from '../types/common.types'
 import MemeSideComponentRO from "./MemeSideRO";
 import { db } from '../firebase/firebase'
+import { DocumentData } from 'firebase/firestore'
 
 interface Props {
     id: string | null
@@ -12,40 +13,60 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
 
     const [memeData, setMemeData] = useState<MemeData | null>(null)
     const [fetchStatus, setFetchStatus] = useState("Loading...")
-
+    const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
     const fetchData = async (): Promise<MemeData[]> => {
-        if (!id) {
-            const first = db.collection('memes')
-                .orderBy('createdAt')
-                .limit(1);
+        if (!id && !lastVisible) {
+            console.log("here1")
 
-            const snapshot = await db.collection('memes').limit(1).get();
 
-            if (snapshot.docs.length) {
-                const dataRef = db.collection('memes').doc(snapshot.docs[snapshot.docs.length - 1].id);
+            var first = db.collection('memes').orderBy("createdAt", "desc").limit(1);
+            console.log("FIRST QUERY!")
+            first.get().then(function (documentSnapshots) {
+                setMemeData(documentSnapshots.docs[documentSnapshots.docs.length - 1].data() as MemeData)
+                setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1])
+
+            });
+
+
+        } else {
+            console.log("here2")
+            if (id && !lastVisible) {
+                console.log("here3")
+                const dataRef = db.collection('memes').doc(id!);
                 const doc = await dataRef.get();
 
                 if (!doc.exists) {
                     setMemeData(null)
                     setFetchStatus("Meme does not exist")
                 } else {
-                    setMemeData(doc.data() as MemeData)
+                    const data: MemeData = doc.data() as MemeData
+                    setMemeData(data)
                 }
-
-                // Get the last document
-                //const last = snapshot.docs[snapshot.docs.length - 1];
-
-                // Construct a new query starting at this document.
-                // Note: this will not have the desired effect if multiple
-                // cities have the exact same population value.
-                // const next = db.collection('memes')
-                //     .startAfter(snapshot.docs[snapshot.docs.length - 1].id)
-                //     .limit(1);
-            } else {
-                setFetchStatus("There are no memes")
             }
         }
+
         return [];
+    }
+
+    const showNext = async () => {
+        console.log("next")
+        if (lastVisible) {
+            console.log("lastVisible: ", lastVisible.data().createdAt)
+            var next = db.collection('memes').orderBy("createdAt", "desc")
+                .startAfter(lastVisible!.data().createdAt).limit(1);
+
+            next.get().then(function (docSn) {
+                console.log("SECOND QUERY!")
+                docSn.forEach(function (doc) {
+                    console.log(doc.data().createdAt.toMillis())
+                });
+
+                setMemeData(docSn.docs[docSn.docs.length - 1].data() as MemeData)
+                setLastVisible(docSn.docs[docSn.docs.length - 1])
+            });
+        } else {
+            console.log("NO lastVisible: ")
+        }
     }
 
     useEffect(() => {
@@ -70,7 +91,7 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
                                     :
                                     <>
                                         <button className="submit_btn">PREV</button>
-                                        <button className="submit_btn">NEXT</button>
+                                        <button className="submit_btn" onClick={showNext}>NEXT</button>
                                     </>
                             }
                         </div>
