@@ -5,7 +5,7 @@ import { MenuOptions } from './types/common.types';
 import CreateMemeContext from './context/CreateContext';
 import CreateMeme from './components/CreateMeme';
 import BrowseMeme from './components/BrowseMeme';
-import { MemeData, TextDirection, MemeSide } from './types/common.types'
+import { MemeData, TextDirection, MemeSide, ContextValue } from './types/common.types'
 
 
 const initCreateContext: MemeData = {
@@ -66,15 +66,24 @@ function App() {
     setState(newState)
   }
 
+  const value: ContextValue = {
+    state,
+    handleMemeTitle,
+    handleMemeImgURL,
+    handleMemeTitleDirection,
+    gotoMeme
+  }
+
   return (
     <>
       <Header appmode={appmode} menuSelect={menuSelect} />
       {
         appmode === MenuOptions.CREATE ?
-          <CreateMemeContext.Provider value={state}>
-            <CreateMeme handleMemeTitle={handleMemeTitle} handleMemeImgURL={handleMemeImgURL} handleMemeTitleDirection={handleMemeTitleDirection} gotoMeme={gotoMeme} />
+          <CreateMemeContext.Provider value={value}>
+            <CreateMeme />
           </CreateMemeContext.Provider>
-          : <BrowseMeme id={memeid.length ? memeid : null} />
+          :
+          <BrowseMeme id={memeid.length ? memeid : null} />
       }
     </>
   );

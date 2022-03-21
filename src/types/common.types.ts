@@ -26,3 +26,11 @@ export interface MemeData {
   memeLeft: MemeTitleImageDirection
   memeRight: MemeTitleImageDirection
 }
+
+export interface ContextValue {
+  state: MemeData,
+  handleMemeTitle?: (val: string, side: MemeSide) => void,
+  handleMemeImgURL?: (val: string, side: MemeSide) => void,
+  handleMemeTitleDirection?: (val: TextDirection, side: MemeSide) => void,
+  gotoMeme?: (id: string) => void
+}

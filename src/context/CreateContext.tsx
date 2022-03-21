@@ -1,7 +1,7 @@
 import { createContext } from "react";
-import { MemeData, TextDirection } from '../types/common.types'
+import { MemeData, TextDirection, ContextValue } from '../types/common.types'
 
-const initCreateContext: MemeData = {
+const init: MemeData = {
     memeLeft: {
         memeTitle: "",
         memeImageURL: "",
@@ -14,6 +14,10 @@ const initCreateContext: MemeData = {
     }
 }
 
-const CreateMemeContext = createContext(initCreateContext)
+const value: ContextValue = {
+    state: init
+}
+
+const CreateMemeContext = createContext<ContextValue>(value)
 
 export default CreateMemeContext;
