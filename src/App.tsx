@@ -7,19 +7,18 @@ import CreateMeme from './components/CreateMeme';
 import BrowseMeme from './components/BrowseMeme';
 import { MemeData, TextDirection, MemeSide } from './types/common.types'
 
+
 const initCreateContext: MemeData = {
-  imgTxt: {
-    txtleft: "",
-    txtright: ""
+  memeLeft: {
+    memeTitle: "",
+    memeImageURL: "",
+    memeTitleDirection: TextDirection.UP
   },
-  imgUrl: {
-    imgurlleft: "",
-    imgurlright: ""
-  },
-  txtDirection: {
-    txtdirectionleft: TextDirection.UP,
-    txtdirectionright: TextDirection.UP
-  },
+  memeRight: {
+    memeTitle: "",
+    memeImageURL: "",
+    memeTitleDirection: TextDirection.UP
+  }
 }
 
 function App() {
@@ -37,32 +36,32 @@ function App() {
     setAppmode(MenuOptions.BROWSE)
   }
 
-  const handleImgText = (val: string, side: MemeSide) => {
+  const handleMemeTitle = (val: string, side: MemeSide) => {
     const newState = { ...state }
     if (side === MemeSide.LEFT) {
-      newState.imgTxt.txtleft = val;
+      newState.memeLeft.memeTitle = val
     } else {
-      newState.imgTxt.txtright = val;
+      newState.memeRight.memeTitle = val
     }
     setState(newState)
   }
 
-  const handleDirection = (val: TextDirection, side: MemeSide) => {
+  const handleMemeImgURL = (val: string, side: MemeSide) => {
     const newState = { ...state }
     if (side === MemeSide.LEFT) {
-      newState.txtDirection.txtdirectionleft = val;
+      newState.memeLeft.memeImageURL = val
     } else {
-      newState.txtDirection.txtdirectionright = val;
+      newState.memeRight.memeImageURL = val
     }
     setState(newState)
   }
 
-  const handleImgURL = (val: string, side: MemeSide) => {
+  const handleMemeTitleDirection = (val: TextDirection, side: MemeSide) => {
     const newState = { ...state }
     if (side === MemeSide.LEFT) {
-      newState.imgUrl.imgurlleft = val;
+      newState.memeLeft.memeTitleDirection = val
     } else {
-      newState.imgUrl.imgurlright = val;
+      newState.memeRight.memeTitleDirection = val
     }
     setState(newState)
   }
@@ -73,7 +72,7 @@ function App() {
       {
         appmode === MenuOptions.CREATE ?
           <CreateMemeContext.Provider value={state}>
-            <CreateMeme handleImgText={handleImgText} handleDirection={handleDirection} handleImgURL={handleImgURL} gotoMeme={gotoMeme}/>
+            <CreateMeme handleMemeTitle={handleMemeTitle} handleMemeImgURL={handleMemeImgURL} handleMemeTitleDirection={handleMemeTitleDirection} gotoMeme={gotoMeme} />
           </CreateMemeContext.Provider>
           : <BrowseMeme id={memeid.length ? memeid : null} />
       }

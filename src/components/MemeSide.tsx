@@ -7,51 +7,50 @@ import './MemeSide.scss'
 
 interface Props {
     side: MemeSide
-    handleImgText: (val: string, side: MemeSide) => void,
-    handleDirection: (val: TextDirection, side: MemeSide) => void
-    handleImgURL: (val: string, side: MemeSide) => void
+    handleMemeTitle: (val: string, side: MemeSide) => void,
+    handleMemeImgURL: (val: string, side: MemeSide) => void,
+    handleMemeTitleDirection: (val: TextDirection, side: MemeSide) => void
 }
 
 const defaultMemeData: MemeData = {
-    imgTxt: {
-        txtleft: "Edit to enter text for LEFT meme image",
-        txtright: "Edit to enter text for RIGHT meme image"
+    memeLeft: {
+        memeTitle: "Edit to enter text for LEFT meme image",
+        memeImageURL: "https://i1.wp.com/lanecdr.org/wp-content/uploads/2019/08/placeholder.png",
+        memeTitleDirection: TextDirection.UP,
     },
-    imgUrl: {
-        imgurlleft: "https://i1.wp.com/lanecdr.org/wp-content/uploads/2019/08/placeholder.png",
-        imgurlright: "https://i1.wp.com/lanecdr.org/wp-content/uploads/2019/08/placeholder.png"
-    },
-    txtDirection: {
-        txtdirectionleft: TextDirection.UP,
-        txtdirectionright: TextDirection.UP
+
+    memeRight: {
+        memeTitle: "Edit to enter text for RIGHT meme image",
+        memeImageURL: "https://i1.wp.com/lanecdr.org/wp-content/uploads/2019/08/placeholder.png",
+        memeTitleDirection: TextDirection.UP,
     }
 }
 
-const MemeSideComponent: React.FC<Props> = ({ side, handleDirection, handleImgText, handleImgURL }) => {
+const MemeSideComponent: React.FC<Props> = ({ side, handleMemeTitle, handleMemeImgURL, handleMemeTitleDirection }) => {
 
     const [edit, setEdit] = useState(false)
     const ctx = useContext(CreateMemeContext);
 
 
-    const imgTxt = side === MemeSide.LEFT ? ctx.imgTxt.txtleft.length ? ctx.imgTxt.txtleft : defaultMemeData.imgTxt.txtleft
-        : ctx.imgTxt.txtright.length ? ctx.imgTxt.txtright : defaultMemeData.imgTxt.txtright
+    const imgTxt = side === MemeSide.LEFT ? ctx.memeLeft.memeTitle.length ? ctx.memeLeft.memeTitle : defaultMemeData.memeLeft.memeTitle
+        : ctx.memeRight.memeTitle.length ? ctx.memeRight.memeTitle : defaultMemeData.memeRight.memeTitle
 
-    const textDirectionContext = side === MemeSide.LEFT ? ctx.txtDirection.txtdirectionleft : ctx.txtDirection.txtdirectionright
-    const imgTxtContext = side === MemeSide.LEFT ? ctx.imgTxt.txtleft : ctx.imgTxt.txtright
+    const textDirectionContext = side === MemeSide.LEFT ? ctx.memeLeft.memeTitleDirection : ctx.memeRight.memeTitleDirection
+    const imgTxtContext = side === MemeSide.LEFT ? ctx.memeLeft.memeTitle : ctx.memeRight.memeTitle
 
-    const textDirectionDefault = side === MemeSide.LEFT ? defaultMemeData.txtDirection.txtdirectionleft : defaultMemeData.txtDirection.txtdirectionright
-    const imgTxtDefault = side === MemeSide.LEFT ? defaultMemeData.imgTxt.txtleft : defaultMemeData.imgTxt.txtright
+    const textDirectionDefault = side === MemeSide.LEFT ? defaultMemeData.memeLeft.memeTitleDirection : defaultMemeData.memeRight.memeTitleDirection
+    const imgTxtDefault = side === MemeSide.LEFT ? defaultMemeData.memeLeft.memeTitle : defaultMemeData.memeRight.memeTitle
 
     const imgUrl = side === MemeSide.LEFT ?
-        ctx.imgUrl.imgurlleft.length ? ctx.imgUrl.imgurlleft : defaultMemeData.imgUrl.imgurlleft
-        : ctx.imgUrl.imgurlright.length ? ctx.imgUrl.imgurlright : defaultMemeData.imgUrl.imgurlright
+        ctx.memeLeft.memeImageURL.length ? ctx.memeLeft.memeImageURL : defaultMemeData.memeLeft.memeImageURL
+        : ctx.memeRight.memeImageURL.length ? ctx.memeRight.memeImageURL : defaultMemeData.memeRight.memeImageURL
 
     const imgAlt = side === MemeSide.LEFT ? "Meme picture LEFT" : "Meme picture RIGHT"
     const imgPlaceHolder = side === MemeSide.LEFT ? "Enter image URL for LEFT side" : "Enter image URL for RIGHT side"
 
 
-    const [tempImgUrlLeft, setTmpImgUrlLeft] = useState(ctx.imgUrl.imgurlleft.length ? ctx.imgUrl.imgurlleft : "")
-    const [tempImgUrlRight, setTmpImgUrlRight] = useState(ctx.imgUrl.imgurlright.length ? ctx.imgUrl.imgurlright : "")
+    const [tempImgUrlLeft, setTmpImgUrlLeft] = useState(ctx.memeLeft.memeImageURL.length ? ctx.memeLeft.memeImageURL : "")
+    const [tempImgUrlRight, setTmpImgUrlRight] = useState(ctx.memeRight.memeImageURL.length ? ctx.memeRight.memeImageURL : "")
 
     const handleEditToggle = () => {
         if (!edit) {
@@ -59,11 +58,11 @@ const MemeSideComponent: React.FC<Props> = ({ side, handleDirection, handleImgTe
         } else {
             if (side === MemeSide.LEFT) {
                 if (tempImgUrlLeft !== imgUrl) {
-                    handleImgURL(tempImgUrlLeft, MemeSide.LEFT)
+                    handleMemeImgURL(tempImgUrlLeft, MemeSide.LEFT)
                 }
             } else {
                 if (tempImgUrlRight !== imgUrl) {
-                    handleImgURL(tempImgUrlRight, MemeSide.RIGHT)
+                    handleMemeImgURL(tempImgUrlRight, MemeSide.RIGHT)
                 }
             }
             setEdit(false)
@@ -82,18 +81,18 @@ const MemeSideComponent: React.FC<Props> = ({ side, handleDirection, handleImgTe
 
     const imgTxtHandler = (e: React.ChangeEvent<HTMLInputElement>, side: MemeSide) => {  //this has nothing to do with image URL , it is the top or bottom meme text handler
         if (e.target.value.length < 100) {
-            handleImgText(e.target.value, side)
+            handleMemeTitle(e.target.value, side)
         }
     }
 
     const imgError = () => {
         let placeHolderURL = "https://i1.wp.com/lanecdr.org/wp-content/uploads/2019/08/placeholder.png"
         window.alert("Image could not be loaded, reverting to default.")
-        handleImgURL(placeHolderURL, side)
+        handleMemeImgURL(placeHolderURL, side)
         if (side === MemeSide.LEFT) {
-            setTmpImgUrlLeft(defaultMemeData.imgUrl.imgurlleft)
+            setTmpImgUrlLeft(defaultMemeData.memeLeft.memeImageURL)
         } else {
-            setTmpImgUrlRight(defaultMemeData.imgUrl.imgurlright)
+            setTmpImgUrlRight(defaultMemeData.memeRight.memeImageURL)
         }
     }
 
@@ -113,17 +112,17 @@ const MemeSideComponent: React.FC<Props> = ({ side, handleDirection, handleImgTe
                             {
                                 textDirectionContext === TextDirection.NOTSELECTED ?
                                     textDirectionDefault === TextDirection.UP ?
-                                        <button type="button" className="arrow_button" onClick={() => handleDirection(TextDirection.DOWN, side)}>
+                                        <button type="button" className="arrow_button" onClick={() => handleMemeTitleDirection(TextDirection.DOWN, side)}>
                                             <FontAwesomeIcon icon={faArrowDown} size={'2x'} className="arrow_icon" />
                                         </button>
-                                        : <button type="button" className="arrow_button" onClick={() => handleDirection(TextDirection.UP, side)}>
+                                        : <button type="button" className="arrow_button" onClick={() => handleMemeTitleDirection(TextDirection.UP, side)}>
                                             <FontAwesomeIcon icon={faArrowUp} size={'2x'} className="arrow_icon" />
                                         </button>
                                     : textDirectionContext === TextDirection.UP ?
-                                        <button type="button" className="arrow_button" onClick={() => handleDirection(TextDirection.DOWN, side)}>
+                                        <button type="button" className="arrow_button" onClick={() => handleMemeTitleDirection(TextDirection.DOWN, side)}>
                                             <FontAwesomeIcon icon={faArrowDown} size={'2x'} className="arrow_icon" />
                                         </button>
-                                        : <button type="button" className="arrow_button" onClick={() => handleDirection(TextDirection.UP, side)}>
+                                        : <button type="button" className="arrow_button" onClick={() => handleMemeTitleDirection(TextDirection.UP, side)}>
                                             <FontAwesomeIcon icon={faArrowUp} size={'2x'} className="arrow_icon" />
                                         </button>
                             }

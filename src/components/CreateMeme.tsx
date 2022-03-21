@@ -1,43 +1,42 @@
 import { useContext, useState } from "react";
 import CreateMemeContext from "../context/CreateContext";
 import './CreateMeme.scss'
-import { TextDirection, MemeSide } from '../types/common.types'
+import { TextDirection, MemeSide, MemeData } from '../types/common.types'
 import MemeSideComponent from "./MemeSide";
 import { db } from '../firebase/firebase'
 import { updateDoc, serverTimestamp } from "firebase/firestore";
 
 interface Props {
-    handleImgText: (val: string, side: MemeSide) => void,
-    handleDirection: (val: TextDirection, side: MemeSide) => void
-    handleImgURL: (val: string, side: MemeSide) => void
+    handleMemeTitle: (val: string, side: MemeSide) => void,
+    handleMemeImgURL: (val: string, side: MemeSide) => void,
+    handleMemeTitleDirection: (val: TextDirection, side: MemeSide) => void,
     gotoMeme: (id: string) => void
 }
 
-const CreateMeme: React.FC<Props> = ({ handleImgText, handleDirection, handleImgURL, gotoMeme }) => {
+const CreateMeme: React.FC<Props> = ({ handleMemeTitle, handleMemeImgURL, handleMemeTitleDirection, gotoMeme }) => {
     const ctx = useContext(CreateMemeContext)
-
 
     const canSubmit = async () => {
 
         let err = ""
 
-        if (!(ctx.imgTxt.txtleft && ctx.imgTxt.txtleft.length && ctx.imgTxt.txtleft != "Edit to enter text for LEFT meme image" && ctx.imgTxt.txtleft.trim().length > 0)) {
+        if (!(ctx.memeLeft.memeTitle && ctx.memeLeft.memeTitle.length && ctx.memeLeft.memeTitle != "Edit to enter text for LEFT meme image" && ctx.memeLeft.memeTitle.trim().length > 0)) {
             err += "LEFT meme text is not set\n"
         }
 
-        if (!(ctx.imgTxt.txtright && ctx.imgTxt.txtright.length && ctx.imgTxt.txtright != "Edit to enter text for RIGHT meme image" && ctx.imgTxt.txtright.trim().length > 0)) {
+        if (!(ctx.memeRight.memeTitle && ctx.memeRight.memeTitle.length && ctx.memeRight.memeTitle != "Edit to enter text for RIGHT meme image" && ctx.memeRight.memeTitle.trim().length > 0)) {
             err += "RIGHT meme text is not set\n"
         }
 
-        if (!(ctx.imgUrl.imgurlleft && ctx.imgUrl.imgurlleft.trim().length > 0 && ctx.imgUrl.imgurlleft != "https://i1.wp.com/lanecdr.org/wp-content/uploads/2019/08/placeholder.png")) {
+        if (!(ctx.memeLeft.memeImageURL && ctx.memeLeft.memeImageURL.trim().length > 0 && ctx.memeLeft.memeImageURL != "https://i1.wp.com/lanecdr.org/wp-content/uploads/2019/08/placeholder.png")) {
             err += "LEFT meme image is not set\n"
         }
 
-        if (!(ctx.imgUrl.imgurlright && ctx.imgUrl.imgurlright.trim().length > 0 && ctx.imgUrl.imgurlright != "https://i1.wp.com/lanecdr.org/wp-content/uploads/2019/08/placeholder.png")) {
+        if (!(ctx.memeRight.memeImageURL && ctx.memeRight.memeImageURL.trim().length > 0 && ctx.memeRight.memeImageURL != "https://i1.wp.com/lanecdr.org/wp-content/uploads/2019/08/placeholder.png")) {
             err += "RIGHT meme image is not set\n"
         }
 
-        if (!(ctx.txtDirection.txtdirectionleft != TextDirection.NOTSELECTED && ctx.txtDirection.txtdirectionright != TextDirection.NOTSELECTED)) {
+        if (!(ctx.memeLeft.memeTitleDirection != TextDirection.NOTSELECTED && ctx.memeRight.memeTitleDirection != TextDirection.NOTSELECTED)) {
             err += "Meme text direction is not set\n"
         }
 
@@ -54,20 +53,17 @@ const CreateMeme: React.FC<Props> = ({ handleImgText, handleDirection, handleImg
 
     const saveMeme = async () => {
         const docRef = db.collection('memes');
-
-        const data = {
-            imgTxt: {
-                txtleft: ctx.imgTxt.txtleft,
-                txtright: ctx.imgTxt.txtright
+        const data: MemeData = {
+            memeLeft: {
+                memeTitle: ctx.memeLeft.memeTitle,
+                memeImageURL: ctx.memeLeft.memeImageURL,
+                memeTitleDirection: ctx.memeLeft.memeTitleDirection
             },
-            imgUrl: {
-                imgurlleft: ctx.imgUrl.imgurlleft,
-                imgurlright: ctx.imgUrl.imgurlright
-            },
-            txtDirection: {
-                txtdirectionleft: ctx.txtDirection.txtdirectionleft,
-                txtdirectionright: ctx.txtDirection.txtdirectionright
-            },
+            memeRight: {
+                memeTitle: ctx.memeRight.memeTitle,
+                memeImageURL: ctx.memeRight.memeImageURL,
+                memeTitleDirection: ctx.memeRight.memeTitleDirection
+            }
         }
         let res = await docRef.add(data);
         console.log("meme added with id:", res.id)
@@ -79,13 +75,13 @@ const CreateMeme: React.FC<Props> = ({ handleImgText, handleDirection, handleImg
             createdAt: serverTimestamp()
         });
 
-        handleImgText("", MemeSide.LEFT)
-        handleImgURL("", MemeSide.LEFT)
-        handleDirection(TextDirection.UP, MemeSide.LEFT)
+        handleMemeTitle("", MemeSide.LEFT)
+        handleMemeImgURL("", MemeSide.LEFT)
+        handleMemeTitleDirection(TextDirection.UP, MemeSide.LEFT)
 
-        handleImgText("", MemeSide.RIGHT)
-        handleImgURL("", MemeSide.RIGHT)
-        handleDirection(TextDirection.UP, MemeSide.RIGHT)
+        handleMemeTitle("", MemeSide.RIGHT)
+        handleMemeImgURL("", MemeSide.RIGHT)
+        handleMemeTitleDirection(TextDirection.UP, MemeSide.RIGHT)
 
         gotoMeme(res.id)
     }
@@ -94,8 +90,8 @@ const CreateMeme: React.FC<Props> = ({ handleImgText, handleDirection, handleImg
         <div className="main">
             <div className="creatememe">
                 <div className="canvas">
-                    <MemeSideComponent side={MemeSide.LEFT} handleDirection={handleDirection} handleImgText={handleImgText} handleImgURL={handleImgURL} />
-                    <MemeSideComponent side={MemeSide.RIGHT} handleDirection={handleDirection} handleImgText={handleImgText} handleImgURL={handleImgURL} />
+                    <MemeSideComponent side={MemeSide.LEFT} handleMemeTitle={handleMemeTitle} handleMemeImgURL={handleMemeImgURL} handleMemeTitleDirection={handleMemeTitleDirection} />
+                    <MemeSideComponent side={MemeSide.RIGHT} handleMemeTitle={handleMemeTitle} handleMemeImgURL={handleMemeImgURL} handleMemeTitleDirection={handleMemeTitleDirection} />
                 </div>
             </div>
             <div className="btn_container">

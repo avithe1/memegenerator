@@ -2,17 +2,15 @@ import { createContext } from "react";
 import { MemeData, TextDirection } from '../types/common.types'
 
 const initCreateContext: MemeData = {
-    imgTxt: {
-        txtleft: "",
-        txtright: ""
+    memeLeft: {
+        memeTitle: "",
+        memeImageURL: "",
+        memeTitleDirection: TextDirection.UP
     },
-    imgUrl: {
-        imgurlleft: "",
-        imgurlright: ""
-    },
-    txtDirection: {
-        txtdirectionleft: TextDirection.UP,
-        txtdirectionright: TextDirection.UP
+    memeRight: {
+        memeTitle: "",
+        memeImageURL: "",
+        memeTitleDirection: TextDirection.UP
     }
 }
 

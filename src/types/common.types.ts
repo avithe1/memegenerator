@@ -15,18 +15,14 @@ export enum MemeSide {
   RIGHT
 }
 
+export interface MemeTitleImageDirection {
+  memeTitle: string
+  memeImageURL: string
+  memeTitleDirection: TextDirection
+}
+
 export interface MemeData {
-  createdAt?:string
-  imgTxt: {
-    txtleft: string,
-    txtright: string
-  },
-  imgUrl: {
-    imgurlleft: string,
-    imgurlright: string
-  },
-  txtDirection: {
-    txtdirectionleft: TextDirection,
-    txtdirectionright: TextDirection
-  },
+  createdAt?: string
+  memeLeft: MemeTitleImageDirection
+  memeRight: MemeTitleImageDirection
 }

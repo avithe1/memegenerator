@@ -79,8 +79,8 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
                     <>
                         <div className="creatememe">
                             <div className="canvas">
-                                <MemeSideComponentRO side={MemeSide.LEFT} data={memeData} />
-                                <MemeSideComponentRO side={MemeSide.RIGHT} data={memeData} />
+                                <MemeSideComponentRO  side={MemeSide.LEFT} data={memeData.memeLeft} />
+                                <MemeSideComponentRO  side={MemeSide.RIGHT} data={memeData.memeRight} />
                             </div>
                         </div>
                         <div className="btn_container">
