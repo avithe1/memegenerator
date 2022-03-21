@@ -3,7 +3,7 @@ import CreateMemeContext from "../context/CreateContext";
 import { MemeSide, TextDirection, MemeData } from "../types/common.types";
 import { faEdit as editIcon, faArrowUp, faArrowDown, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import './MemeSide.scss'
+import './MemePanel.scss'
 
 interface Props {
     side: MemeSide
@@ -12,21 +12,23 @@ interface Props {
     handleMemeTitleDirection: (val: TextDirection, side: MemeSide) => void
 }
 
+const imgPlaceholder = "https://i1.wp.com/lanecdr.org/wp-content/uploads/2019/08/placeholder.png"
+
 const defaultMemeData: MemeData = {
     memeLeft: {
         memeTitle: "Edit to enter text for LEFT meme image",
-        memeImageURL: "https://i1.wp.com/lanecdr.org/wp-content/uploads/2019/08/placeholder.png",
+        memeImageURL: imgPlaceholder,
         memeTitleDirection: TextDirection.UP,
     },
 
     memeRight: {
         memeTitle: "Edit to enter text for RIGHT meme image",
-        memeImageURL: "https://i1.wp.com/lanecdr.org/wp-content/uploads/2019/08/placeholder.png",
+        memeImageURL: imgPlaceholder,
         memeTitleDirection: TextDirection.UP,
     }
 }
 
-const MemeSideComponent: React.FC<Props> = ({ side, handleMemeTitle, handleMemeImgURL, handleMemeTitleDirection }) => {
+const MemePanel: React.FC<Props> = ({ side, handleMemeTitle, handleMemeImgURL, handleMemeTitleDirection }) => {
 
     const [edit, setEdit] = useState(false)
     const ctx = useContext(CreateMemeContext);
@@ -86,9 +88,8 @@ const MemeSideComponent: React.FC<Props> = ({ side, handleMemeTitle, handleMemeI
     }
 
     const imgError = () => {
-        let placeHolderURL = "https://i1.wp.com/lanecdr.org/wp-content/uploads/2019/08/placeholder.png"
         window.alert("Image could not be loaded, reverting to default.")
-        handleMemeImgURL(placeHolderURL, side)
+        handleMemeImgURL(imgPlaceholder, side)
         if (side === MemeSide.LEFT) {
             setTmpImgUrlLeft(defaultMemeData.memeLeft.memeImageURL)
         } else {
@@ -160,4 +161,4 @@ const MemeSideComponent: React.FC<Props> = ({ side, handleMemeTitle, handleMemeI
     )
 }
 
-export default MemeSideComponent;
+export default MemePanel;

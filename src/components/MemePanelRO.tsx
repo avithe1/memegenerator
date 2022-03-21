@@ -1,12 +1,12 @@
 import { MemeSide, TextDirection, MemeTitleImageDirection } from "../types/common.types";
-import './MemeSide.scss'
+import './MemePanel.scss'
 
 interface Props {
     side: MemeSide
     data: MemeTitleImageDirection
 }
 
-const MemeSideComponentRO: React.FC<Props> = ({ side, data }) => {
+const MemePanelRO: React.FC<Props> = ({ side, data }) => {
     const imgAlt = side === MemeSide.LEFT ? "Meme pic left" : "Meme pic right"
     return (
         <div className={side === MemeSide.LEFT ? "canvas_left" : "canvas_right"}>
@@ -21,4 +21,4 @@ const MemeSideComponentRO: React.FC<Props> = ({ side, data }) => {
     )
 }
 
-export default MemeSideComponentRO;
+export default MemePanelRO;

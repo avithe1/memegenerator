@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import './CreateMeme.scss'
 import { MemeSide, MemeData } from '../types/common.types'
-import MemeSideComponentRO from "./MemeSideRO";
+import MemePanelRO from "./MemePanelRO";
 import { db } from '../firebase/firebase'
 import { DocumentData } from 'firebase/firestore'
 
@@ -79,8 +79,8 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
                     <>
                         <div className="creatememe">
                             <div className="canvas">
-                                <MemeSideComponentRO  side={MemeSide.LEFT} data={memeData.memeLeft} />
-                                <MemeSideComponentRO  side={MemeSide.RIGHT} data={memeData.memeRight} />
+                                <MemePanelRO  side={MemeSide.LEFT} data={memeData.memeLeft} />
+                                <MemePanelRO  side={MemeSide.RIGHT} data={memeData.memeRight} />
                             </div>
                         </div>
                         <div className="btn_container">

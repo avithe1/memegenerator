@@ -1,8 +1,8 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import CreateMemeContext from "../context/CreateContext";
 import './CreateMeme.scss'
 import { TextDirection, MemeSide, MemeData } from '../types/common.types'
-import MemeSideComponent from "./MemeSide";
+import MemePanel from "./MemePanel";
 import { db } from '../firebase/firebase'
 import { updateDoc, serverTimestamp } from "firebase/firestore";
 
@@ -12,6 +12,8 @@ interface Props {
     handleMemeTitleDirection: (val: TextDirection, side: MemeSide) => void,
     gotoMeme: (id: string) => void
 }
+
+const imgPlaceholder = "https://i1.wp.com/lanecdr.org/wp-content/uploads/2019/08/placeholder.png"
 
 const CreateMeme: React.FC<Props> = ({ handleMemeTitle, handleMemeImgURL, handleMemeTitleDirection, gotoMeme }) => {
     const ctx = useContext(CreateMemeContext)
@@ -28,11 +30,11 @@ const CreateMeme: React.FC<Props> = ({ handleMemeTitle, handleMemeImgURL, handle
             err += "RIGHT meme text is not set\n"
         }
 
-        if (!(ctx.memeLeft.memeImageURL && ctx.memeLeft.memeImageURL.trim().length > 0 && ctx.memeLeft.memeImageURL != "https://i1.wp.com/lanecdr.org/wp-content/uploads/2019/08/placeholder.png")) {
+        if (!(ctx.memeLeft.memeImageURL && ctx.memeLeft.memeImageURL.trim().length > 0 && ctx.memeLeft.memeImageURL != imgPlaceholder)) {
             err += "LEFT meme image is not set\n"
         }
 
-        if (!(ctx.memeRight.memeImageURL && ctx.memeRight.memeImageURL.trim().length > 0 && ctx.memeRight.memeImageURL != "https://i1.wp.com/lanecdr.org/wp-content/uploads/2019/08/placeholder.png")) {
+        if (!(ctx.memeRight.memeImageURL && ctx.memeRight.memeImageURL.trim().length > 0 && ctx.memeRight.memeImageURL != imgPlaceholder)) {
             err += "RIGHT meme image is not set\n"
         }
 
@@ -41,7 +43,7 @@ const CreateMeme: React.FC<Props> = ({ handleMemeTitle, handleMemeImgURL, handle
         }
 
         if (err.length) {
-            window.alert(err)
+            window.alert("ERROR!\n\n" + err)
             return false
         } else {
             await saveMeme()
@@ -65,13 +67,11 @@ const CreateMeme: React.FC<Props> = ({ handleMemeTitle, handleMemeImgURL, handle
                 memeTitleDirection: ctx.memeRight.memeTitleDirection
             }
         }
-        let res = await docRef.add(data);
-        console.log("meme added with id:", res.id)
 
+        let res = await docRef.add(data); // MEME ADDED WITH ID : res.id
         const docRefUpdateTime = db.collection('memes').doc(res.id)
 
-        // Update the timestamp field with the value from the server
-        const updateTimestamp = await updateDoc(docRefUpdateTime, {
+        await updateDoc(docRefUpdateTime, {
             createdAt: serverTimestamp()
         });
 
@@ -90,8 +90,8 @@ const CreateMeme: React.FC<Props> = ({ handleMemeTitle, handleMemeImgURL, handle
         <div className="main">
             <div className="creatememe">
                 <div className="canvas">
-                    <MemeSideComponent side={MemeSide.LEFT} handleMemeTitle={handleMemeTitle} handleMemeImgURL={handleMemeImgURL} handleMemeTitleDirection={handleMemeTitleDirection} />
-                    <MemeSideComponent side={MemeSide.RIGHT} handleMemeTitle={handleMemeTitle} handleMemeImgURL={handleMemeImgURL} handleMemeTitleDirection={handleMemeTitleDirection} />
+                    <MemePanel side={MemeSide.LEFT} handleMemeTitle={handleMemeTitle} handleMemeImgURL={handleMemeImgURL} handleMemeTitleDirection={handleMemeTitleDirection} />
+                    <MemePanel side={MemeSide.RIGHT} handleMemeTitle={handleMemeTitle} handleMemeImgURL={handleMemeImgURL} handleMemeTitleDirection={handleMemeTitleDirection} />
                 </div>
             </div>
             <div className="btn_container">
