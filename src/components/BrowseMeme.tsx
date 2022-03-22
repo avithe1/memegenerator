@@ -34,7 +34,7 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
                     setMemeData(null)
                     setFetchStatus("Meme does not exist")
                 } else {
-                    setFetchStatus("")
+                    setFetchStatus("🥳 HURRAAYYY , Your meme is ready...")
                     const data: MemeData = doc.data() as MemeData
                     setMemeData(data)
                 }
@@ -49,10 +49,11 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
 
             next.get().then(function (docSn) {
                 if (docSn.docs.length) {
+                    setFetchStatus("")
                     setMemeData(docSn.docs[docSn.docs.length - 1].data() as MemeData)
                     setLastVisible(docSn.docs[docSn.docs.length - 1])
                 } else {
-                    setFetchStatus("No more memes")
+                    setFetchStatus("No more memes 😭")
                     setNoMoreMemes(true)
                 }
             });
@@ -82,7 +83,7 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
 
     return (
         <div className="main">
-            <p>{fetchStatus}</p>
+            <p className="fetchstatus"><b>{fetchStatus}</b></p>
             {
                 memeData ?
                     <>
