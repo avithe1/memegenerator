@@ -160,6 +160,12 @@ const MemePanel: React.FC<Props> = ({ side }) => {
         }
     }
 
+    const elementClickHandler = () => {
+        if (!_edit) {
+            handleEditToggle()
+        }
+    }
+
     return (
         <div className={side === MemeSide.LEFT ? "canvas_left" : "canvas_right"}>
             <div className={side === MemeSide.LEFT ? "config_left" : "config_right"} onClick={handleEditToggle}>
@@ -202,6 +208,7 @@ const MemePanel: React.FC<Props> = ({ side }) => {
                     </div>
                     :
                     <p
+                        onClick={elementClickHandler}
                         className={`canvas_txt ${textDirectionContext === TextDirection.NOTSELECTED ?
                             textDirectionDefault === TextDirection.UP ? 'canvas_txt__top' : 'canvas_txt__bottom' :
                             textDirectionContext === TextDirection.UP ? 'canvas_txt__top' : 'canvas_txt__bottom'
@@ -210,6 +217,7 @@ const MemePanel: React.FC<Props> = ({ side }) => {
                     </p>
             }
             <img
+                onClick={elementClickHandler}
                 className="canvas_img"
                 src={imgUrl}
                 onError={imgError}
