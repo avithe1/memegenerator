@@ -27,6 +27,8 @@ export interface MemeData {
   memeRight: MemeTitleImageDirection
 }
 
+//There has to be a better TypeScript way of doing this
+//Need to add ! for using functions
 export interface ContextValue {
   state: MemeData,
   handleMemeTitle?: (val: string, side: MemeSide) => void,

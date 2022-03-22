@@ -10,29 +10,30 @@ import { imgPlaceholder, memeTitleLeftPlaceholder, memeTitleRightPlaceholder } f
 
 const CreateMeme: React.FC = () => {
     const ctx = useContext(CreateMemeContext)
-    const ctxState = ctx.state
+    const ctxStateLeft = ctx.state.memeLeft
+    const ctxStateRight = ctx.state.memeRight
 
     const canSubmit = async () => {
 
         let err = ""
 
-        if (!(ctxState.memeLeft.memeTitle && ctxState.memeLeft.memeTitle.length && ctxState.memeLeft.memeTitle != memeTitleLeftPlaceholder && ctxState.memeLeft.memeTitle.trim().length > 0)) {
+        if (!(ctxStateLeft.memeTitle && ctxStateLeft.memeTitle.length && ctxStateLeft.memeTitle != memeTitleLeftPlaceholder && ctxStateLeft.memeTitle.trim().length > 0)) {
             err += "LEFT meme text is not set\n"
         }
 
-        if (!(ctxState.memeRight.memeTitle && ctxState.memeRight.memeTitle.length && ctxState.memeRight.memeTitle != memeTitleRightPlaceholder && ctxState.memeRight.memeTitle.trim().length > 0)) {
+        if (!(ctxStateRight.memeTitle && ctxStateRight.memeTitle.length && ctxStateRight.memeTitle != memeTitleRightPlaceholder && ctxStateRight.memeTitle.trim().length > 0)) {
             err += "RIGHT meme text is not set\n"
         }
 
-        if (!(ctxState.memeLeft.memeImageURL && ctxState.memeLeft.memeImageURL.trim().length > 0 && ctxState.memeLeft.memeImageURL != imgPlaceholder)) {
+        if (!(ctxStateLeft.memeImageURL && ctxStateLeft.memeImageURL.trim().length > 0 && ctxStateLeft.memeImageURL != imgPlaceholder)) {
             err += "LEFT meme image is not set\n"
         }
 
-        if (!(ctxState.memeRight.memeImageURL && ctxState.memeRight.memeImageURL.trim().length > 0 && ctxState.memeRight.memeImageURL != imgPlaceholder)) {
+        if (!(ctxStateRight.memeImageURL && ctxStateRight.memeImageURL.trim().length > 0 && ctxStateRight.memeImageURL != imgPlaceholder)) {
             err += "RIGHT meme image is not set\n"
         }
 
-        if (!(ctxState.memeLeft.memeTitleDirection != TextDirection.NOTSELECTED && ctxState.memeRight.memeTitleDirection != TextDirection.NOTSELECTED)) {
+        if (!(ctxStateLeft.memeTitleDirection != TextDirection.NOTSELECTED && ctxStateRight.memeTitleDirection != TextDirection.NOTSELECTED)) {
             err += "Meme text direction is not set\n"
         }
 
@@ -51,14 +52,14 @@ const CreateMeme: React.FC = () => {
         const docRef = db.collection('memes');
         const data: MemeData = {
             memeLeft: {
-                memeTitle: ctxState.memeLeft.memeTitle,
-                memeImageURL: ctxState.memeLeft.memeImageURL,
-                memeTitleDirection: ctxState.memeLeft.memeTitleDirection
+                memeTitle: ctxStateLeft.memeTitle,
+                memeImageURL: ctxStateLeft.memeImageURL,
+                memeTitleDirection: ctxStateLeft.memeTitleDirection
             },
             memeRight: {
-                memeTitle: ctxState.memeRight.memeTitle,
-                memeImageURL: ctxState.memeRight.memeImageURL,
-                memeTitleDirection: ctxState.memeRight.memeTitleDirection
+                memeTitle: ctxStateRight.memeTitle,
+                memeImageURL: ctxStateRight.memeImageURL,
+                memeTitleDirection: ctxStateRight.memeTitleDirection
             }
         }
 
