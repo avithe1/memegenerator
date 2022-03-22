@@ -49,7 +49,7 @@ const MemePanel: React.FC<Props> = ({ side }) => {
         : ctxState.memeRight.memeImageURL.length ? ctxState.memeRight.memeImageURL : defaultMemeData.memeRight.memeImageURL
 
     const imgAlt = side === MemeSide.LEFT ? "Meme picture LEFT" : "Meme picture RIGHT"
-    const imgPlaceHolder = side === MemeSide.LEFT ? "Enter image URL for LEFT side" : "Enter image URL for RIGHT side"
+    const imgPlaceHolder = side === MemeSide.LEFT ? "Paste image URL for LEFT side" : "Paste image URL for RIGHT side"
 
 
     const [tempImgUrlLeft, setTmpImgUrlLeft] = useState(ctxState.memeLeft.memeImageURL.length ? ctxState.memeLeft.memeImageURL : "")
