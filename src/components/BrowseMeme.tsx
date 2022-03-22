@@ -11,27 +11,23 @@ interface Props {
 
 const BrowseMeme: React.FC<Props> = ({ id }) => {
 
+    const [_id, setId] = useState(id)
     const [memeData, setMemeData] = useState<MemeData | null>(null)
     const [fetchStatus, setFetchStatus] = useState("Loading...")
     const [lastVisible, setLastVisible] = useState<DocumentData | null>(null)
+    const [noMoreMemes, setNoMoreMemes] = useState(false)
+
+    useEffect(() => {
+        fetchData()
+    }, [])
 
 
     const fetchData = async () => {
-        if (!id && !lastVisible) {
-            var first = db.collection('memes').orderBy("createdAt", "desc").limit(1);
-            console.log("FIRST MEME!")
-            first.get().then(function (documentSnapshots) {
-                if (documentSnapshots.docs.length) {
-                    setFetchStatus("")
-                    setMemeData(documentSnapshots.docs[documentSnapshots.docs.length - 1].data() as MemeData)
-                    setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1])
-                } else {
-                    setFetchStatus("There are no memes available")
-                }
-            });
+        if (!_id && !lastVisible) {
+            await getFirstDocument()
         } else {
-            if (id && !lastVisible) {
-                const dataRef = db.collection('memes').doc(id!);
+            if (_id && !lastVisible) {
+                const dataRef = db.collection('memes').doc(_id!);
                 const doc = await dataRef.get();
 
                 if (!doc.exists) {
@@ -47,19 +43,17 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
     }
 
     const showNext = async () => {
-        console.log("next")
         if (lastVisible) {
-            console.log("lastVisible: ", lastVisible.data().createdAt)
             var next = db.collection('memes').orderBy("createdAt", "desc")
                 .startAfter(lastVisible!.data().createdAt).limit(1);
 
             next.get().then(function (docSn) {
-                console.log("SECOND QUERY!")
                 if (docSn.docs.length) {
                     setMemeData(docSn.docs[docSn.docs.length - 1].data() as MemeData)
                     setLastVisible(docSn.docs[docSn.docs.length - 1])
                 } else {
                     setFetchStatus("No more memes")
+                    setNoMoreMemes(true)
                 }
             });
         } else {
@@ -67,9 +61,24 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
         }
     }
 
-    useEffect(() => {
-        fetchData()
-    }, [])
+    const browseFromStart = async () => {
+        setNoMoreMemes(false)
+        setId(null)
+        await getFirstDocument()
+    }
+
+    const getFirstDocument = async () => {
+        var first = db.collection('memes').orderBy("createdAt", "desc").limit(1);
+        first.get().then(function (documentSnapshots) {
+            if (documentSnapshots.docs.length) {
+                setFetchStatus("")
+                setMemeData(documentSnapshots.docs[documentSnapshots.docs.length - 1].data() as MemeData)
+                setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1])
+            } else {
+                setFetchStatus("There are no memes available")
+            }
+        });
+    }
 
     return (
         <div className="main">
@@ -79,14 +88,14 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
                     <>
                         <div className="creatememe">
                             <div className="canvas">
-                                <MemePanelRO  side={MemeSide.LEFT} data={memeData.memeLeft} />
-                                <MemePanelRO  side={MemeSide.RIGHT} data={memeData.memeRight} />
+                                <MemePanelRO side={MemeSide.LEFT} data={memeData.memeLeft} />
+                                <MemePanelRO side={MemeSide.RIGHT} data={memeData.memeRight} />
                             </div>
                         </div>
                         <div className="btn_container">
                             {
-                                id ?
-                                    <button className="submit_btn">Browse from start</button>
+                                _id || noMoreMemes ?
+                                    <button className="submit_btn" onClick={browseFromStart}>Browse from start</button>
                                     :
                                     <button className="submit_btn" onClick={showNext}>NEXT</button>
                             }
