@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import CreateMemeContext from "../context/CreateContext";
-import { MemeSide, TextDirection, MemeData } from "../types/common.types";
+import { MemeSide, TextDirection, MemeData, Edits } from "../types/common.types";
 import { faEdit as editIcon, faArrowUp, faArrowDown, faFloppyDisk } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import './MemePanel.scss'
@@ -26,7 +26,7 @@ const defaultMemeData: MemeData = {
 
 const MemePanel: React.FC<Props> = ({ side }) => {
 
-    const [edit, setEdit] = useState(false)
+    const [_edit, toggleEdit] = useState(false)
     const [editState, setEditState] = useState<MemeData | null>(null)
     const [memeTextChange, setMemeTextChange] = useState(false)
     const [memeImageURLChange, setMemeImageURLChange] = useState(false)
@@ -56,7 +56,7 @@ const MemePanel: React.FC<Props> = ({ side }) => {
     const [tempImgUrlRight, setTmpImgUrlRight] = useState(ctxState.memeRight.memeImageURL.length ? ctxState.memeRight.memeImageURL : "")
 
     const handleEditToggle = () => {
-        if (!edit && editState === null) {
+        if (!_edit && editState === null) {
             const memeState: MemeData = {
                 memeLeft: {
                     memeTitle: ctxState.memeLeft.memeTitle,
@@ -70,7 +70,17 @@ const MemePanel: React.FC<Props> = ({ side }) => {
                 }
             }
             setEditState(memeState)
-            setEdit(true)
+            toggleEdit(true)
+
+
+            const editVal: Edits = { ...ctx.edit } as Edits
+            if (side === MemeSide.LEFT) {
+                editVal.left = true
+            } else {
+                editVal.right = true
+            }
+            ctx.setEdit!(editVal)
+
         } else {
             if (side === MemeSide.LEFT) {
                 if (tempImgUrlLeft !== imgUrl) {
@@ -81,7 +91,16 @@ const MemePanel: React.FC<Props> = ({ side }) => {
                     ctx.handleMemeImgURL!(tempImgUrlRight, MemeSide.RIGHT)
                 }
             }
-            setEdit(false)
+
+            toggleEdit(false)
+            const editVal: Edits = { ...ctx.edit } as Edits
+            if (side === MemeSide.LEFT) {
+                editVal.left = false
+            } else {
+                editVal.right = false
+            }
+            ctx.setEdit!(editVal)
+
             setMemeTextChange(false)
             setMemeImageURLChange(false)
             setMemeTextDirectionChange(false)
@@ -101,7 +120,7 @@ const MemePanel: React.FC<Props> = ({ side }) => {
         }
     }
 
-    const handleImageUrlEditorLeft = (e: React.ChangeEvent<HTMLInputElement>) => { 
+    const handleImageUrlEditorLeft = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value !== editState?.memeLeft.memeImageURL) {
             setMemeImageURLChange(true)
         } else {
@@ -110,7 +129,7 @@ const MemePanel: React.FC<Props> = ({ side }) => {
         setTmpImgUrlLeft(e.target.value)
     }
 
-    const handleImageUrlEditorRight = (e: React.ChangeEvent<HTMLInputElement>) => { 
+    const handleImageUrlEditorRight = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value !== editState?.memeRight.memeImageURL) {
             setMemeImageURLChange(true)
         } else {
@@ -144,10 +163,10 @@ const MemePanel: React.FC<Props> = ({ side }) => {
     return (
         <div className={side === MemeSide.LEFT ? "canvas_left" : "canvas_right"}>
             <div className={side === MemeSide.LEFT ? "config_left" : "config_right"} onClick={handleEditToggle}>
-                <FontAwesomeIcon icon={edit ? faFloppyDisk : editIcon} size={'lg'} className="edit_icon" /> <span className="edittxt">{edit ? (memeTextChange || memeImageURLChange || memeTextDirectionChange) ? "Save" : "Cancel" : "Edit"}</span>
+                <FontAwesomeIcon icon={_edit ? faFloppyDisk : editIcon} size={'lg'} className="edit_icon" /> <span className="edittxt">{_edit ? (memeTextChange || memeImageURLChange || memeTextDirectionChange) ? "Save" : "Cancel" : "Edit"}</span>
             </div>
             {
-                edit ?
+                _edit ?
                     <div
                         className={`canvas_txt ${textDirectionContext === TextDirection.NOTSELECTED ?
                             textDirectionDefault === TextDirection.UP ? 'canvas_txt__top' : 'canvas_txt__bottom' :
@@ -196,7 +215,7 @@ const MemePanel: React.FC<Props> = ({ side }) => {
                 onError={imgError}
                 alt={imgAlt} />
             {
-                edit ?
+                _edit ?
                     <input className="url_input" type="text" placeholder={imgPlaceHolder} onChange={handleImageUrlEditor} value={side === MemeSide.LEFT ? tempImgUrlLeft : tempImgUrlRight} />
                     : null
             }

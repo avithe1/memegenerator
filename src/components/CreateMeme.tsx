@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import CreateMemeContext from "../context/CreateContext";
 import './CreateMeme.scss'
 import { TextDirection, MemeSide, MemeData } from '../types/common.types'
@@ -17,24 +17,29 @@ const CreateMeme: React.FC = () => {
 
         let err = ""
 
-        if (!(ctxStateLeft.memeTitle && ctxStateLeft.memeTitle.length && ctxStateLeft.memeTitle != memeTitleLeftPlaceholder && ctxStateLeft.memeTitle.trim().length > 0)) {
-            err += "LEFT meme text is not set\n"
-        }
+        if (!ctx.edit?.left && !ctx.edit?.right) {
 
-        if (!(ctxStateRight.memeTitle && ctxStateRight.memeTitle.length && ctxStateRight.memeTitle != memeTitleRightPlaceholder && ctxStateRight.memeTitle.trim().length > 0)) {
-            err += "RIGHT meme text is not set\n"
-        }
+            if (!(ctxStateLeft.memeTitle && ctxStateLeft.memeTitle.length && ctxStateLeft.memeTitle != memeTitleLeftPlaceholder && ctxStateLeft.memeTitle.trim().length > 0)) {
+                err += "<-- LEFT meme text is not set\n"
+            }
 
-        if (!(ctxStateLeft.memeImageURL && ctxStateLeft.memeImageURL.trim().length > 0 && ctxStateLeft.memeImageURL != imgPlaceholder)) {
-            err += "LEFT meme image is not set\n"
-        }
+            if (!(ctxStateLeft.memeImageURL && ctxStateLeft.memeImageURL.trim().length > 0 && ctxStateLeft.memeImageURL != imgPlaceholder)) {
+                err += "<-- LEFT meme image is not set\n"
+            }
 
-        if (!(ctxStateRight.memeImageURL && ctxStateRight.memeImageURL.trim().length > 0 && ctxStateRight.memeImageURL != imgPlaceholder)) {
-            err += "RIGHT meme image is not set\n"
-        }
+            if (!(ctxStateRight.memeTitle && ctxStateRight.memeTitle.length && ctxStateRight.memeTitle != memeTitleRightPlaceholder && ctxStateRight.memeTitle.trim().length > 0)) {
+                err += "RIGHT meme text is not set -->\n"
+            }
 
-        if (!(ctxStateLeft.memeTitleDirection != TextDirection.NOTSELECTED && ctxStateRight.memeTitleDirection != TextDirection.NOTSELECTED)) {
-            err += "Meme text direction is not set\n"
+            if (!(ctxStateRight.memeImageURL && ctxStateRight.memeImageURL.trim().length > 0 && ctxStateRight.memeImageURL != imgPlaceholder)) {
+                err += "RIGHT meme image is not set -->\n"
+            }
+
+            if (!(ctxStateLeft.memeTitleDirection != TextDirection.NOTSELECTED && ctxStateRight.memeTitleDirection != TextDirection.NOTSELECTED)) {
+                err += "Meme text direction is not set\n"
+            }
+        } else {
+            err += "Cannot save in edit mode, save or cancel edits."
         }
 
         if (err.length) {

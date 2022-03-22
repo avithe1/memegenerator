@@ -5,7 +5,7 @@ import { MenuOptions } from './types/common.types';
 import CreateMemeContext from './context/CreateContext';
 import CreateMeme from './components/CreateMeme';
 import BrowseMeme from './components/BrowseMeme';
-import { MemeData, TextDirection, MemeSide, ContextValue } from './types/common.types'
+import { MemeData, TextDirection, MemeSide, ContextValue, Edits } from './types/common.types'
 
 
 const initCreateContext: MemeData = {
@@ -25,6 +25,7 @@ function App() {
   const [memeid, setMemeId] = useState("")
   const [appmode, setAppmode] = useState<MenuOptions>(MenuOptions.BROWSE);
   const [state, setState] = useState(initCreateContext)
+  const [edit, setEdit] = useState<Edits>({ left: false, right: false })
 
   const menuSelect = (option: MenuOptions) => {
     setMemeId("")
@@ -68,10 +69,12 @@ function App() {
 
   const value: ContextValue = {
     state,
+    edit,
     handleMemeTitle,
     handleMemeImgURL,
     handleMemeTitleDirection,
-    gotoMeme
+    gotoMeme,
+    setEdit,
   }
 
   return (
