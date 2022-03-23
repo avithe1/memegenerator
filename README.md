@@ -2,6 +2,23 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+To build the project successfully you first need to have a firebase project. Once you create a firebase project , then add a file
+/src/config/firebseConfig.ts to the cloned repository with the following code
+
+const firebaseConfig = {
+    apiKey: "xxxxxxxxxxx",
+    authDomain: "xxxxxxxx",
+    projectId: "xxxxxxxx",
+    storageBucket: "xxxxxxxx",
+    messagingSenderId: "xxxxxxxx",
+    appId: "xxxxxxxx",
+    measurementId: "xxxxxxx"
+};
+
+export default firebaseConfig;
+
+without this the application will not compile.
+
 ## Available Scripts
 
 In the project directory, you can run:
