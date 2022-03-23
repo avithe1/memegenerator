@@ -20,12 +20,13 @@
 }
 
 .submit_btn{
-    width:50%;
+    //width:50%;
     border: none;
     background-color: blueviolet;
     color:#fff;
     border-radius: 7px;
     cursor: pointer;
+    padding: 10px 50px;
 }
 
 .submit_btn:hover{
@@ -42,4 +43,28 @@
 
 .fetchstatus {
     margin-top: 10px;
+}
+
+@media screen and (min-width:800px){
+    .canvas{
+        width:70%;
+    }
+}
+
+@media screen and (min-width:1000px){
+    .canvas{
+        width:60%;
+    }
+}
+
+@media screen and (min-width:1200px){
+    .canvas{
+        width:50%;
+    }
+}
+
+@media screen and (min-width:1400px){
+    .canvas{
+        width:40%;
+    }
 }

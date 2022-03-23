@@ -34,7 +34,7 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
                     setMemeData(null)
                     setFetchStatus("Meme does not exist")
                 } else {
-                    setFetchStatus("🥳 HURRAAYYY , Your meme is ready...")
+                    setFetchStatus("🥳  HURRAAYYY , Your meme is ready...")
                     const data: MemeData = doc.data() as MemeData
                     setMemeData(data)
                 }
@@ -49,7 +49,7 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
 
             next.get().then(function (docSn) {
                 if (docSn.docs.length) {
-                    setFetchStatus("")
+                    setFetchStatus(`MemeID : ${docSn.docs[docSn.docs.length - 1].id}`)
                     setMemeData(docSn.docs[docSn.docs.length - 1].data() as MemeData)
                     setLastVisible(docSn.docs[docSn.docs.length - 1])
                 } else {
@@ -72,7 +72,7 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
         var first = db.collection('memes').orderBy("createdAt", "desc").limit(1);
         first.get().then(function (documentSnapshots) {
             if (documentSnapshots.docs.length) {
-                setFetchStatus("")
+                setFetchStatus(`MemeID : ${documentSnapshots.docs[documentSnapshots.docs.length - 1].id}`)
                 setMemeData(documentSnapshots.docs[documentSnapshots.docs.length - 1].data() as MemeData)
                 setLastVisible(documentSnapshots.docs[documentSnapshots.docs.length - 1])
             } else {
