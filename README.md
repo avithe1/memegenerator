@@ -2,6 +2,9 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+
+## Firebase Dependency
+
 To build the project successfully you first need to have a firebase project. Once you create a firebase project , then add a file
 /src/config/firebseConfig.ts to the cloned repository with the following code
 
@@ -18,6 +21,7 @@ const firebaseConfig = {
 export default firebaseConfig;
 
 without this the application will not compile.
+
 
 ## Available Scripts
 
