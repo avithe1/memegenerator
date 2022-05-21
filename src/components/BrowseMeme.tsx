@@ -54,6 +54,7 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
                     setLastVisible(docSn.docs[docSn.docs.length - 1])
                 } else {
                     setFetchStatus("No more memes 😭")
+                    setMemeData(null)
                     setNoMoreMemes(true)
                 }
             });
@@ -87,12 +88,15 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
             {
                 memeData ?
                     <>
-                        <div className="creatememe">
-                            <div className="canvas">
-                                <MemePanelRO side={MemeSide.LEFT} data={memeData.memeLeft} />
-                                <MemePanelRO side={MemeSide.RIGHT} data={memeData.memeRight} />
-                            </div>
-                        </div>
+                        {
+                            !noMoreMemes ?
+                                <div className="creatememe">
+                                    <div className="canvas">
+                                        <MemePanelRO side={MemeSide.LEFT} data={memeData.memeLeft} />
+                                        <MemePanelRO side={MemeSide.RIGHT} data={memeData.memeRight} />
+                                    </div>
+                                </div> : null
+                        }
                         <div className="btn_container">
                             {
                                 _id || noMoreMemes ?
@@ -101,7 +105,10 @@ const BrowseMeme: React.FC<Props> = ({ id }) => {
                                     <button className="submit_btn" onClick={showNext}>NEXT</button>
                             }
                         </div>
-                    </> : null
+                    </> :
+                    noMoreMemes ?
+                        <button className="submit_btn" onClick={browseFromStart}>Browse from start</button>
+                        : null
             }
 
         </div>
