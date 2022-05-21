@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import CreateMemeContext from "../context/CreateContext";
 import './CreateMeme.scss'
 import { TextDirection, MemeSide, MemeData } from '../types/common.types'
@@ -46,7 +46,11 @@ const CreateMeme: React.FC = () => {
             window.alert("ERROR!\n\n" + err)
             return false
         } else {
-            await saveMeme()
+            try{
+                await saveMeme()
+            } catch (e :any) {
+                alert(e.message);
+            }
         }
 
         return true;
